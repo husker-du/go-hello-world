@@ -1,8 +1,17 @@
-build:
-	go build \
-		-ldflags "-s -w" \
-		-o out/helloWorld \
-		./hello_world.go
+PORT := 80
+VERSION_TAG := v0.1
+REGISTRY_NAME := stayforlong
+REPOSITORY_NAME := go-hello-world
+CONTAINER_NAME := hello_world
 
-docker-build:
-	docker run -it --rm -v $(PWD):/app -w /app golang:1.13-buster make build
+build:
+	docker build -t $(REGISTRY_NAME)/$(REPOSITORY_NAME):$(VERSION_TAG) .
+
+push:
+	docker push $(REGISTRY_NAME)/$(REPOSITORY_NAME):$(VERSION_TAG)
+
+run:
+	docker run -d -p $(PORT):80 --name $(CONTAINER_NAME) $(REGISTRY_NAME)/$(REPOSITORY_NAME):$(VERSION_TAG)
+
+stop:
+	docker stop $(CONTAINER_NAME) && docker rm $(CONTAINER_NAME)
