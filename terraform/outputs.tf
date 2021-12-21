@@ -13,12 +13,10 @@ output "private_subnet_ids" {
   value       = [ for subnet in aws_subnet.private : subnet.id ]
 }
 
-# output "alb_sg_id" {
-#   description = "ALB security group id"
-#   value = aws_security_group.alb.id
-# }
+output "public_subnets" {
+  value = values(aws_subnet.public).*.id
+}
 
-# output "ecs_sg_id" {
-#   description = "ECS security group id"
-#   value       = aws_security_group.ecs.id
-# }
+output "alb_hostname" {
+  value = aws_lb.alb.dns_name
+}

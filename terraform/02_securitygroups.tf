@@ -1,5 +1,5 @@
 # ALB Security Group (Traffic Internet -> ALB)
-resource "aws_security_group" "lb" {
+resource "aws_security_group" "alb" {
   name        = "load_balancer_security_group"
   description = "Controls access to the ALB."
   vpc_id      = aws_vpc.vpc.id
@@ -32,7 +32,7 @@ resource "aws_security_group" "ecs" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [ aws_security_group.lb.id ]
+    security_groups = [ aws_security_group.alb.id ]
   }
 
   ingress {

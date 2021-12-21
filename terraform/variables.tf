@@ -40,3 +40,16 @@ variable "eip_private_ip" {
   type        = string
   default     = "10.0.0.5"
 }
+
+# Load Balancer
+variable "health_check_path" {
+  description = "Health check path for the default target group"
+  default     = "/healthz"
+}
+
+# ECS
+variable "ecs_cluster_name" {
+  description = "Name of the ECS cluster"
+  type        = string
+  default     = "s4l-hello-world"
+}
