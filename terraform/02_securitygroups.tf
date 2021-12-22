@@ -13,11 +13,11 @@ resource "aws_security_group" "alb" {
   }
 
   egress {
-    description = "Allows all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
+    from_port   = 0             # Allowing any incoming port
+    to_port     = 0             # Allowing any outgoing port
+    protocol    = "-1"          # Allowing any outgoing protocol
+    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic out to all IP addresses
   }
 }
 
@@ -29,10 +29,10 @@ resource "aws_security_group" "ecs" {
 
   ingress {
     description     = "Allow all inbound traffic from the load balancer"
-    from_port       = 0
+    from_port       = 0 
     to_port         = 0
     protocol        = "-1"
-    security_groups = [ aws_security_group.alb.id ]
+    security_groups = [aws_security_group.alb.id]
   }
 
   ingress {
@@ -45,9 +45,9 @@ resource "aws_security_group" "ecs" {
 
   egress {
     description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 0             # Allowing any incoming port
+    to_port     = 0             # Allowing any outgoing port
+    protocol    = "-1"          # Allowing any outgoing protocol
+    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic out to all IP addresses
   }
 }

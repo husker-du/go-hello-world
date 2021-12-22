@@ -44,7 +44,7 @@ variable "eip_private_ip" {
 # Load Balancer
 variable "health_check_path" {
   description = "Health check path for the default target group"
-  default     = "/healthz"
+  default     = "/"
 }
 
 # ECS
@@ -52,4 +52,44 @@ variable "ecs_cluster_name" {
   description = "Name of the ECS cluster"
   type        = string
   default     = "s4l-hello-world"
+}
+
+variable "ecs_container" {
+  description = "Configuration of the ECS task container"
+  type = object({
+    name  = string
+    image = string
+    ports = list(number)
+  })
+  default = {
+    name  = "hello_world"
+    image = "tutum/hello-world"
+    ports = [80]
+  }
+}
+
+variable "ecs_service_name" {
+  description = "Name of the service"
+  type        = string
+  default     = "hello-world"
+}
+
+variable "ecs_task_name" {
+  description = "Name of the task"
+  type        = string
+  default     = "go-hello-world"
+}
+
+variable "replicas" {
+  description = "Number of instances of the task definition to place and keep running"
+  type        = number
+  default     = 2
+}
+
+
+# Key pair
+variable "ssh_pubkey_file" {
+  description = "Path to an SSH public key"
+  type        = string
+  default     = "ssh/aws_ec2_key.pub"
 }

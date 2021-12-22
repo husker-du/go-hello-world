@@ -4,14 +4,12 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ecs:*",
-        "ec2:*",
-        "elasticloadbalancing:*",
-        "ecr:*",
-        "cloudwatch:*",
-        "s3:*",
-        "rds:*",
-        "logs:*"
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
       ],
       "Resource": "*"
     }
