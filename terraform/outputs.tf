@@ -29,5 +29,5 @@ output "ecs_cluster" {
 
 output "target_group" {
   description = "The load balancer target group id"
-  value       = aws_alb_target_group.alb_ecs_http.ide
+  value       = aws_alb_target_group.alb_ecs_http.id
 }

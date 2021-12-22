@@ -93,3 +93,10 @@ variable "ssh_pubkey_file" {
   type        = string
   default     = "ssh/aws_ec2_key.pub"
 }
+
+# ECR
+variable "repository_name" {
+  description = "Name of the application image repository in the ECR registry"
+  type        = string
+  default     = "go-hello-world"
+}
