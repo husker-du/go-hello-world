@@ -14,7 +14,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "public" {
   for_each          = { for i in [1, 2] : i => cidrsubnet(aws_vpc.vpc.cidr_block, 8, i) }
   cidr_block        = each.value
-  availability_zone = data.aws_availability_zones.available_zones.names[tonumber(each.key)-1]
+  availability_zone = data.aws_availability_zones.available_zones.names[tonumber(each.key) - 1]
   vpc_id            = aws_vpc.vpc.id
 }
 
@@ -22,7 +22,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   for_each          = { for i in [3, 4] : i => cidrsubnet(aws_vpc.vpc.cidr_block, 8, i) }
   cidr_block        = each.value
-  availability_zone = data.aws_availability_zones.available_zones.names[tonumber(each.key)-3]
+  availability_zone = data.aws_availability_zones.available_zones.names[tonumber(each.key) - 3]
   vpc_id            = aws_vpc.vpc.id
 }
 
@@ -57,7 +57,7 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_eip" "gw" {
   vpc                       = true
   associate_with_private_ip = var.eip_private_ip
-  depends_on                = [ aws_internet_gateway.igw ]
+  depends_on                = [aws_internet_gateway.igw]
 }
 
 # Public NAT gateway in the public subnet
@@ -65,7 +65,7 @@ resource "aws_eip" "gw" {
 resource "aws_nat_gateway" "gw" {
   allocation_id = aws_eip.gw.id
   subnet_id     = lookup(aws_subnet.public, 1).id
-  depends_on    = [ aws_eip.gw ]
+  depends_on    = [aws_eip.gw]
 }
 
 # Route the private subnet traffic through the NAT Gateway (private_subnet--[NAT GW]-->internet)
