@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"time"
 	"net/http"
 )
 
@@ -10,7 +12,12 @@ const (
 )
 
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello world")
+	hostname, error := os.Hostname()
+	if error != nil {
+  	hostname = "unknown"
+ 	}
+	fmt.Fprintf(w, "Hello world from [ %s ]", hostname)
+	time.Sleep(1 * time.Second)
 }
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
