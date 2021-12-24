@@ -7,7 +7,7 @@ variable "region" {
 variable "profile" {
   description = "The AWS credentials profile."
   type        = string
-  default     = "sa-terraform"
+  default     = "s4l-terraform"
 }
 
 variable "bucket_tfstate" {
@@ -86,6 +86,12 @@ variable "replicas" {
   default     = 2
 }
 
+# ECR
+variable "repository_name" {
+  description = "Name of the application image repository in the ECR registry"
+  type        = string
+  default     = "go-hello-world"
+}
 
 # Key pair
 variable "ssh_pubkey_file" {
@@ -94,9 +100,15 @@ variable "ssh_pubkey_file" {
   default     = "ssh/aws_ec2_key.pub"
 }
 
-# ECR
-variable "repository_name" {
-  description = "Name of the application image repository in the ECR registry"
-  type        = string
-  default     = "go-hello-world"
+# Autoscaling
+variable "max_scale" {
+  description = "The max capacity of the scalable target"
+  type        = number
+  default     = 4
+}
+
+variable "min_scale" {
+  description = "The min capacity of the scalable target"
+  type        = number
+  default     = 1
 }
