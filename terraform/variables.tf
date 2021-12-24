@@ -28,6 +28,22 @@ variable "environment" {
   default     = "dev"
 }
 
+variable "tags" {
+  description = "Tags applied to the resources"
+  type = object({
+    Organization = string
+    Project      = string
+    Team         = string
+    Owner        = string
+  })
+  default = {
+    Organization = "stayforlong"
+    Project      = "go-hello-world"
+    Team         = "job-appliers"
+    Owner        = "ctomas"
+  }
+}
+
 # Network
 variable "vpc_cidr" {
   description = "CIDR block for VPC."

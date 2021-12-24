@@ -2,11 +2,13 @@
 resource "aws_key_pair" "ec2_key_pair" {
   key_name   = "${var.ecs_cluster_name}_key_pair"
   public_key = file(var.ssh_pubkey_file)
+  tags       = var.tags
 }
 
 # ECS cluster
 resource "aws_ecs_cluster" "fargate" {
   name = "${var.ecs_cluster_name}-cluster"
+  tags = var.tags
 
   capacity_providers = ["FARGATE"] # Capacity providers are used to manage the infrastructure the tasks run on.
 
@@ -25,6 +27,7 @@ resource "aws_ecs_task_definition" "app_task" {
   memory                   = 512                            # Specifying the memory our container requires
   execution_role_arn       = aws_iam_role.ecs_task_exec.arn # The role the ECS task assumes when running the task
   task_role_arn            = aws_iam_role.ecs_task_exec.arn
+  tags                     = var.tags
   container_definitions = jsonencode([
     {
       name      = var.ecs_task_name
@@ -50,6 +53,7 @@ resource "aws_ecs_service" "app_service" {
   task_definition = aws_ecs_task_definition.app_task.arn
   desired_count   = var.replicas # The number of containers we want to deploy
   launch_type     = "FARGATE"
+  tags            = var.tags
 
   network_configuration {
     subnets          = [for subnet in values(aws_subnet.public) : subnet.id]

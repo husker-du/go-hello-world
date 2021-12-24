@@ -3,6 +3,7 @@ resource "aws_security_group" "alb" {
   name        = "load_balancer_security_group"
   description = "Controls access to the ALB."
   vpc_id      = aws_vpc.vpc.id
+  tags        = var.tags
 
   ingress {
     description = "Allows HTTP inbound traffic from internet"
@@ -26,10 +27,10 @@ resource "aws_security_group" "ecs" {
   name        = "ecs_security_group"
   description = "Allows inbound access from the ALB only"
   vpc_id      = aws_vpc.vpc.id
-
+  tags        = var.tags
   ingress {
     description     = "Allow all inbound traffic from the load balancer"
-    from_port       = 0 
+    from_port       = 0
     to_port         = 0
     protocol        = "-1"
     security_groups = [aws_security_group.alb.id]
