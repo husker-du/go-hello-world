@@ -13,8 +13,12 @@ output "private_subnet_ids" {
   value       = [for subnet in aws_subnet.private : subnet.id]
 }
 
-output "public_subnets" {
-  value = values(aws_subnet.public).*.id
+output "public_subnet_cidrs" {
+  value = values(aws_subnet.public).*.cidr_block
+}
+
+output "private_subnet_cidrs" {
+  value = values(aws_subnet.private).*.cidr_block
 }
 
 output "alb_dns_name" {
@@ -28,6 +32,6 @@ output "ecs_cluster" {
 }
 
 output "target_group" {
-  description = "The load balancer target group id"
-  value       = aws_alb_target_group.alb_ecs_http.id
+  description = "The load balancer ECS target group id"
+  value       = aws_alb_target_group.ecs_http.id
 }
