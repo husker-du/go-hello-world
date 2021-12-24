@@ -109,13 +109,6 @@ variable "repository_name" {
   default     = "go-hello-world"
 }
 
-# Key pair
-variable "ssh_pubkey_file" {
-  description = "Path to an SSH public key"
-  type        = string
-  default     = "ssh/aws_ec2_key.pub"
-}
-
 # Autoscaling
 variable "max_scale" {
   description = "The max capacity of the scalable target"

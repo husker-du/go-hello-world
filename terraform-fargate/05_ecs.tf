@@ -1,10 +1,3 @@
-# SSH public key
-resource "aws_key_pair" "ec2_key_pair" {
-  key_name   = "${var.ecs_cluster_name}_key_pair"
-  public_key = file(var.ssh_pubkey_file)
-  tags       = var.tags
-}
-
 # ECS cluster
 resource "aws_ecs_cluster" "fargate" {
   name = "${var.ecs_cluster_name}-cluster"

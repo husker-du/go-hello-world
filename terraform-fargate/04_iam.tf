@@ -12,13 +12,6 @@ resource "aws_iam_role_policy" "ecs_task_exec" {
   role   = aws_iam_role.ecs_task_exec.id
 }
 
-resource "aws_iam_instance_profile" "ecs" {
-  name = "ecs_task_profile"
-  path = "/"
-  role = aws_iam_role.ecs_task_exec.name
-  tags = var.tags
-}
-
 resource "aws_iam_role" "ecs_service" {
   name               = "ecs_service_role"
   assume_role_policy = file("policies/ecs-role.json")
