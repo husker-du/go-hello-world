@@ -1,7 +1,7 @@
 variable "region" {
   description = "The AWS region to create resources in."
   type        = string
-  default     = "eu-west-1"
+  default     = "us-east-1"
 }
 
 variable "profile" {
@@ -26,6 +26,12 @@ variable "environment" {
   description = "The environment (dev, staging, prod)."
   type        = string
   default     = "dev"
+}
+
+variable "app_name" {
+  description = "The application name."
+  type        = string
+  default     = "go-hello-world"
 }
 
 variable "tags" {
@@ -65,39 +71,19 @@ variable "health_check_path" {
 
 # ECS
 variable "ecs_cluster_name" {
-  description = "Name of the ECS cluster"
+  description = "Name of the cluster of EC2 instances"
   type        = string
   default     = "s4l-hello-world"
 }
 
-variable "ecs_container" {
-  description = "Configuration of the ECS task container"
-  type = object({
-    name  = string
-    image = string
-    ports = list(number)
-  })
-  default = {
-    name  = "hello_world"
-    image = "tutum/hello-world"
-    ports = [80]
-  }
-}
-
-variable "ecs_service_name" {
-  description = "Name of the service"
+variable "instance_type" {
+  description = "Instance type"
   type        = string
-  default     = "hello-world"
+  default     = "t2.micro"
 }
 
-variable "ecs_task_name" {
-  description = "Name of the task"
-  type        = string
-  default     = "go-hello-world"
-}
-
-variable "replicas" {
-  description = "Number of instances of the task definition to place and keep running"
+variable "app_count" {
+  description = "Number of Docker containers to run"
   type        = number
   default     = 2
 }
@@ -110,33 +96,31 @@ variable "repository_name" {
 }
 
 # SSH Key pair
-variable "ssh_pubkey_file" {
-  description = "Path to an SSH public key"
-  type        = string
-  default     = "ssh/aws_ec2_key.pub"
-}
-
 variable "ssh_key_name" {
   description = "Name of the ssh key file"
-  type = string
-  default = "ec2key"      # if we keep default blank it will ask for a value when we execute terraform apply
+  type        = string
+  default     = "ec2key" # if we keep default blank it will ask for a value when we execute terraform apply
 }
 
 variable "ssh_key_base_path" {
   description = "Base path of the ssh key file"
-  type = string
-  default = ".ssh/"
+  type        = string
+  default     = "./.ssh" # Caution! Include this path in the .gitignore file
 }
 
 # Autoscaling
-variable "max_scale" {
-  description = "The max capacity of the scalable target"
+variable "min_replicas" {
+  description = "Minimum autoscale (number of EC2)"
+  type        = number
+  default     = 1
+}
+variable "max_replicas" {
+  description = "Maximum autoscale (number of EC2)"
   type        = number
   default     = 4
 }
-
-variable "min_scale" {
-  description = "The min capacity of the scalable target"
+variable "autoscale_desired" {
+  description = "Desired autoscale (number of EC2)"
   type        = number
-  default     = 1
+  default     = 2
 }
