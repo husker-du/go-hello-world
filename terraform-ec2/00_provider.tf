@@ -14,7 +14,7 @@ terraform {
     bucket         = "s4l-terraform-state"
     key            = "dev/hello-world/terraform.tfstate"
     dynamodb_table = "s4l-lock-dynamo"
-    region         = "eu-west-1"
+    region         = "us-east-1"
   }
 }
 

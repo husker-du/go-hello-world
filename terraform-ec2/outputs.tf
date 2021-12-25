@@ -25,3 +25,8 @@ output "alb_dns_name" {
   description = "The load balancer endpoint"
   value       = aws_lb.alb.dns_name
 }
+
+output "ami" {
+  description = "AMI type"
+  value       = data.aws_ami.amazon_linux.id
+}

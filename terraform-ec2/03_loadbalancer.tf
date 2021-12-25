@@ -10,12 +10,12 @@ resource "aws_lb" "alb" {
 
 # Target group attached to the ALB.
 resource "aws_alb_target_group" "ecs_http" {
-  name        = "${var.ecs_cluster_name}-client-tg"
-  port        = 80
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = aws_vpc.vpc.id
-  tags        = var.tags
+  name     = "${var.ecs_cluster_name}-client-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.vpc.id
+  #target_type = "ip"
+  tags = var.tags
 
   health_check {
     path                = var.health_check_path
