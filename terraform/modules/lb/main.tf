@@ -1,21 +1,32 @@
-# Application Load Balancer attached to the public subnets
-resource "aws_lb" "alb" {
-  name               = "${var.ecs_cluster_name}-alb"
-  load_balancer_type = "application"
-  internal           = false
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = values(aws_subnet.public).*.id
-  tags               = var.tags
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.27"
+    }
+  }
+
+  required_version = ">= 1.1.0"
 }
 
-# Target group attached to the ALB.
+# Application Load Balancer attached to the public subnets
+resource "aws_lb" "alb" {
+  name               = "${var.config.app_name}-alb-${var.config.environment}"
+  load_balancer_type = "application"
+  internal           = false
+  subnets            = var.public_subnet_ids
+  security_groups    = [var.alb_sg_id]
+  tags               = var.config.tags
+}
+
+# Target group connected to the listener, it contains target IP addresses accross which incoming traffic is distributed
 resource "aws_alb_target_group" "ecs_http" {
-  name     = "${var.ecs_cluster_name}-client-tg"
-  port     = 80
+  name     = "${var.config.app_name}-client-tg-${var.config.environment}"
+  port     = var.config.port_num
   protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
-  #target_type = "ip"
-  tags = var.tags
+  vpc_id   = var.vpc_id
+  tags     = var.config.tags
+  depends_on = [aws_lb.alb]
 
   health_check {
     path                = var.health_check_path
@@ -24,7 +35,7 @@ resource "aws_alb_target_group" "ecs_http" {
     unhealthy_threshold = 2
     timeout             = 2
     interval            = 5
-    matcher             = "200"
+    matcher             = "200,301,302"
   }
 }
 
@@ -32,10 +43,10 @@ resource "aws_alb_target_group" "ecs_http" {
 # Tells the load balancer to forward incoming traffic on port 80 to wherever the load balancer is attached (the ECS service).
 resource "aws_alb_listener" "ecs_http" {
   load_balancer_arn = aws_lb.alb.id
-  port              = 80
+  port              = var.config.port_num
   protocol          = "HTTP"
+  tags              = var.config.tags
   depends_on        = [aws_alb_target_group.ecs_http]
-  tags              = var.tags
 
   default_action {
     type             = "forward"
