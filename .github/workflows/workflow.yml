@@ -4,16 +4,16 @@ name: Go CICD
 
 on:
   push:
-    branches: [ master ]
+    branches: [ feature/modules ]
     tags: [ "*" ]
   pull_request:
-    branches: [ master ]
+    branches: [ feature/modules ]
 
 env:
   ECR_REPOSITORY: go-hello-world
-  ECS_TASK: go-hello-world
-  ECS_SERVICE: hello-world
-  ECS_CLUSTER: s4l-hello-world-cluster
+  ECS_TASK_DEFINITION: go-hello-world
+  ECS_SERVICE: go-hello-world-service
+  ECS_CLUSTER: go-hello-world-cluster-dev
   CONTAINER_NAME: go-hello-world
 
 jobs:
@@ -75,7 +75,7 @@ jobs:
       - name: Get task definition
         id: get-task
         run: |
-          aws ecs describe-task-definition --task-definition $ECS_TASK --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION --query taskDefinition > task-definition.json
           cat task-definition.json
 
       - name: Update task definition image
