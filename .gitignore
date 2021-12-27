@@ -54,3 +54,6 @@ terraform.rc
 
 # Ignore the generated ssh key
 **/.ssh
+
+# Ignore python virtual environment
+**/virtenv
