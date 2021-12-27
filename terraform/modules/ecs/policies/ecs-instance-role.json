@@ -5,8 +5,6 @@
       "Action": "sts:AssumeRole",
       "Principal": {
         "Service": [
-          "ecs-tasks.amazonaws.com",
-          "ecs.amazonaws.com",
           "ec2.amazonaws.com"
         ]
       },
