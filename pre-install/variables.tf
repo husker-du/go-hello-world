@@ -10,19 +10,19 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "bucket-tfstate" {
+variable "tfstate_bucket_name" {
   description = "The name of the S3 bucket for the terraform remote state."
   type        = string
   default     = "s4l-terraform-state"
 }
 
-variable "lock-dynamo-table" {
+variable "lock_dynamo_table" {
   description = "Name of the DynamoDB table ."
   type        = string
   default     = "s4l-lock-dynamo"
 }
 
-variable "username" {
+variable "programmatic_username" {
   description = "Programmatic user to create the terraform resources"
   type        = string
   default     = "s4l-terraform"
