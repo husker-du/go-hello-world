@@ -4,10 +4,10 @@ name: Go CICD
 
 on:
   push:
-    branches: [ feature/modules ]
+    branches: [ master ]
     tags: [ "*" ]
   pull_request:
-    branches: [ feature/modules ]
+    branches: [ master ]
 
 env:
   ECR_REPOSITORY: go-hello-world
@@ -31,6 +31,14 @@ jobs:
 
       - name: Build
         run: go build -v ./...
+
+      - name: "Testing"
+        run: |
+          echo "Running tests..."
+
+      - name: "Code Analysis"
+        run: |
+          echo "Analyzing code..."
 
   cd:
     name: "Deployment"
