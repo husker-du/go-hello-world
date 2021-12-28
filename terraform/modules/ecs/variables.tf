@@ -46,21 +46,28 @@ variable "ssh_key_base_path" {
   default     = "./.ssh" # Caution! Include this path in the .gitignore file
 }
 
-# Autoscaling
-variable "desired_replicas" {
-  description = "Desired number of task replicas to run."
+# ECS
+variable "desired_tasks" {
+  description = "Number of instances of the task to place and keep running."
   type        = number
   default     = 2
 }
 
-variable "min_replicas" {
-  description = "Minimum autoscale (number of EC2)"
+# Autoscaling
+variable "desired_capacity" {
+  description = "Desired number of EC2 instances to run."
   type        = number
-  default     = 1
+  default     = 2
 }
 
-variable "max_replicas" {
-  description = "Maximum autoscale (number of EC2)"
+variable "min_capacity" {
+  description = "Minimum capacity of the ECS cluster (min number of EC2)"
+  type        = number
+  default     = 2
+}
+
+variable "max_capacity" {
+  description = "Maximum capacity of the ECS cluster (max number of EC2)"
   type        = number
   default     = 4
 }

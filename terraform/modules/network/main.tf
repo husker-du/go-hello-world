@@ -52,7 +52,7 @@ resource "aws_route_table_association" "public" {
   subnet_id      = each.value.id
 }
 
-# # Route table associated to the private subnet
+# Route table associated to the private subnet
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.vpc.id
   tags   = var.config.tags
@@ -71,7 +71,7 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # Elastic IP for internet access via the public NAT
-resource "aws_eip" "public_nat" {
+resource "aws_eip" "nat_gw" {
   vpc                       = true
   associate_with_private_ip = var.eip_private_ip
   tags                      = var.config.tags
@@ -81,18 +81,18 @@ resource "aws_eip" "public_nat" {
 # Public NAT gateway in the public subnet
 # The NAT gateway allows resources within the VPC to communicate with the internet
 # but will prevent communication to the VPC from outside sources
-resource "aws_nat_gateway" "public_nat" {
-  allocation_id     = aws_eip.public_nat.id
+resource "aws_nat_gateway" "nat_gw" {
+  allocation_id     = aws_eip.nat_gw.id
   subnet_id         = lookup(aws_subnet.public, 1).id
   connectivity_type = "public"
   tags              = var.config.tags
-  depends_on        = [aws_eip.public_nat]
+  depends_on        = [aws_eip.nat_gw]
 }
 
 # Traffic from private subnets reaches internet via the NAT Gateway (private_subnet--[NAT GW]-->internet)
 resource "aws_route" "private_to_inet" {
   route_table_id         = aws_route_table.private.id
-  nat_gateway_id         = aws_nat_gateway.public_nat.id
+  nat_gateway_id         = aws_nat_gateway.nat_gw.id
   destination_cidr_block = "0.0.0.0/0"
 }
 
