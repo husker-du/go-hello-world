@@ -31,27 +31,6 @@ data "aws_ami" "ecs_optimized" {
   }
 }
 
-# EC2 instance template launched by the autoscaling
-resource "aws_launch_configuration" "ecs" {
-  name_prefix                 = "${aws_ecs_cluster.ecs.name}-${var.config.environment}-"
-  image_id                    = data.aws_ami.ecs_optimized.id
-  instance_type               = var.instance_type
-  security_groups             = [var.ecs_sg_id]
-  iam_instance_profile        = aws_iam_instance_profile.ecs_instance.id
-  key_name                    = aws_key_pair.ssh.key_name
-  associate_public_ip_address = true
-  # This user data will be executed the first time the machine starts.
-  # This code snippet makes sure the EC2 instance is automatically attached to the ECS cluster that we create earlier
-  user_data = "#!/bin/bash\necho ECS_CLUSTER='${aws_ecs_cluster.ecs.name}' > /etc/ecs/ecs.config"
-
-  # aws_launch_configuration can not be modified.
-  # Therefore we use create_before_destroy so that a new modified aws_launch_configuration can be created
-  # before the old one gets destroyed. That's why we use name_prefix instead of name.
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 # ECS task definition of the service
 data "template_file" "app" {
   template = file("${path.module}/templates/app-container-definitions.json.tpl")
@@ -75,7 +54,7 @@ resource "aws_ecs_service" "app" {
   task_definition = aws_ecs_task_definition.app.arn
   iam_role        = aws_iam_role.ecs_service.arn
   launch_type     = "EC2"
-  desired_count   = var.desired_replicas
+  desired_count   = var.desired_tasks  # Number of instances of the task to place and keep running
   tags            = var.config.tags
   depends_on      = [aws_iam_role_policy_attachment.ecs_service]
 
@@ -91,5 +70,26 @@ resource "aws_ecs_service" "app" {
 
   lifecycle {
     ignore_changes = [desired_count]
+  }
+}
+
+# EC2 instance template launched by the autoscaling
+resource "aws_launch_configuration" "ecs" {
+  name_prefix                 = "${aws_ecs_cluster.ecs.name}-${var.config.environment}-"
+  image_id                    = data.aws_ami.ecs_optimized.id
+  instance_type               = var.instance_type
+  security_groups             = [var.ecs_sg_id]
+  iam_instance_profile        = aws_iam_instance_profile.ecs_instance.id
+  key_name                    = aws_key_pair.ssh.key_name
+  associate_public_ip_address = true
+  # This user data will be executed the first time the machine starts.
+  # This code snippet makes sure the EC2 instance is automatically attached to the ECS cluster that we create earlier
+  user_data = "#!/bin/bash\necho ECS_CLUSTER='${aws_ecs_cluster.ecs.name}' > /etc/ecs/ecs.config"
+
+  # aws_launch_configuration can not be modified.
+  # Therefore we use create_before_destroy so that a new modified aws_launch_configuration can be created
+  # before the old one gets destroyed. That's why we use name_prefix instead of name.
+  lifecycle {
+    create_before_destroy = true
   }
 }

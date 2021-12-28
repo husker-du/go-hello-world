@@ -67,9 +67,10 @@ module "ecs" {
   alb_tg_arn         = module.lb.alb_tg_arn
   ssh_key_name       = "ec2key-${var.environment}"
   ssh_key_base_path  = "./.ssh" # Caution! Include this path in the .gitignore file
-  desired_replicas   = 2
-  max_replicas       = 4
-  min_replicas       = 1
+  desired_tasks      = 2  # Number of replicas of the service task
+  desired_capacity   = 2
+  max_capacity       = 4
+  min_capacity       = 2  # High availability
   ecr_repository_url = module.ecr.repository_url
 }
 
