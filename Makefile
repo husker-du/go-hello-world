@@ -1,12 +1,13 @@
 PORT := 80
 VERSION_TAG := v0.5
-REGISTRY_NAME := 912061915192.dkr.ecr.us-east-1.amazonaws.com
-REPOSITORY_NAME := go-hello-world
-CONTAINER_NAME := hello_world
 AWS_PROFILE := s4l-terraform
-CLUSTER_NAME := go-hello-world-cluster-dev
-SERVICE_NAME := go-hello-world-service
+APP_NAME := go-hello-world
+REGISTRY_NAME := 912061915192.dkr.ecr.us-east-1.amazonaws.com
+REPOSITORY_NAME := $(APP_NAME)
+CLUSTER_NAME := $(APP_NAME)-cluster-dev
+SERVICE_NAME := $(APP_NAME)-service
 REGION := us-east-1
+CONTAINER_NAME := hello_world
 
 login:
 	aws ecr get-login-password --region $(REGION) --profile $(AWS_PROFILE) \
@@ -29,8 +30,8 @@ push:
 .PHONY: deploy
 deploy:
 	python3 -m venv deploy/virtenv; \
-			source deploy/virtenv/bin/activate; \
-			pip install -r deploy/requirements.txt; \
-			python3 deploy/ecs-deploy.py deploy --cluster=$(CLUSTER_NAME) --service=$(SERVICE_NAME) --image=$(REGISTRY_NAME)/$(REPOSITORY_NAME):$(VERSION_TAG) --region=$(REGION); \
-			deactivate
+	source deploy/virtenv/bin/activate; \
+	pip install -r deploy/requirements.txt; \
+	python3 deploy/ecs-deploy.py deploy --cluster=$(CLUSTER_NAME) --service=$(SERVICE_NAME) --image=$(REGISTRY_NAME)/$(REPOSITORY_NAME):$(VERSION_TAG) --region=$(REGION); \
+	deactivate
 
