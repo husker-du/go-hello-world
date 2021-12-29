@@ -18,5 +18,5 @@ variable "subnet_newbits" {
 variable "eip_private_ip" {
   description = "Primary or secondary private IP address to associate with the Elastic IP address."
   type        = string
-  default     = "10.0.0.5"
+  default     = "10.0.1.101"
 }
