@@ -1,6 +1,9 @@
 # go-hello-world
 Simple HTTP Hello World in Golang
 
+## Architecture
+![alt "ECS cluster architecture"](docs/go_hello_world_ecs_cluster.png)
+
 
 ## Prerequisites
 1. Docker installed and running
@@ -8,6 +11,17 @@ Simple HTTP Hello World in Golang
 3. aws cli installed
 4. terraform 1.1.0 installed
 5. python3 installed
+
+### How to build
+From the root of this repository run `make docker-build` and the binary will be located in `./out/` directory (the binary will be compiled for `linux amd64` platform only).
+
+# Run
+Just execute the binary and the webserver will be available at port `80`
+
+### Endpoints
+
+- `/` -> Hello World
+- `/health` -> health check
 
 
 ## Pre-installation
@@ -44,9 +58,7 @@ terraform {
     region         = "us-east-1"
   }
 }
-
 ```
-
 
 ## Installation
 - Run the following commands to install the AWS ECS cluster in the development environment:
@@ -117,27 +129,34 @@ Set the variables in the Makefile acconding to your personal values.
 ``` 
   $ make run
 ```
+### Endpoints
+
+- `/` -> Hello World
+- `/health` -> health check
+
+
+## Stop the docker container
+
+``` 
+  $ make stop
+```
 
 ## Push the image to the ECR repository
 ```
   $ make push
 ```
 
-## Deploy image to ECS cluster
+## Deploy application to ECS service
 ```
   $ make deploy
 ```
 
-### Requirements
-- docker installed and running
 
-### How to build
-From the root of this repository run `make docker-build` and the binary will be located in `./out/` directory (the binary will be compiled for `linux amd64` platform only).
-
-# Run
-Just execute the binary and the webserver will be available at port `80`
-
-### Endpoints
-
-- `/` -> Hello World
-- `/health` -> health check
+# Connect to an EC2 instance of the cluster
+- Terraform generates a SSH key pair. 
+- The public key is save in the `authorized_keys` of the EC2 instance.
+- The private key is saved in a local file in the path `.ssh/ec2key-dev.pem`.
+- Connect to the EC2 using the following command:
+```
+  $ ssh -i ".ssh/ec2key-dev.pem" ec2-user@<public_ipv4_dns>
+```
