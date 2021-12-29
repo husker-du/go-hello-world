@@ -30,7 +30,6 @@ module "network" {
 
   config         = local.config
   vpc_cidr       = "10.0.0.0/16"
-  eip_private_ip = "10.0.0.5"
   subnet_newbits = 8
 }
 
