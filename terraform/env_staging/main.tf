@@ -30,7 +30,6 @@ module "network" {
 
   config         = local.config
   vpc_cidr       = "192.168.0.0/16"
-  eip_private_ip = "192.168.0.12"
   subnet_newbits = 8
 }
 
@@ -48,6 +47,13 @@ module "lb" {
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   alb_sg_id         = module.sg.alb_sg_id
+  health_check_path = "/health"
+}
+
+module "ecr" {
+  source = "../modules/ecr"
+
+  config = local.config
 }
 
 module "ecs" {
@@ -60,10 +66,11 @@ module "ecs" {
   alb_tg_arn         = module.lb.alb_tg_arn
   ssh_key_name       = "ec2key-${var.environment}"
   ssh_key_base_path  = "./.ssh" # Caution! Include this path in the .gitignore file
-  desired_replicas   = 2
-  max_replicas       = 4
-  min_replicas       = 1
-  #ecr_repository_url = module.ecr.repository_url
+  desired_tasks      = 2  # Number of replicas of the service task
+  desired_capacity   = 2
+  max_capacity       = 4
+  min_capacity       = 2 # High availability
+  ecr_repository_url = module.ecr.repository_url
 }
 
 module "autoscaling" {
