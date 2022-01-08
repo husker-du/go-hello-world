@@ -36,3 +36,13 @@ resource "aws_iam_user_policy_attachment" "ecs_full_access_user_policy_attach" {
   user       = aws_iam_user.programmatic_user.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
+
+resource "aws_iam_user_policy_attachment" "route53_full_access_user_policy_attach" {
+  user       = aws_iam_user.programmatic_user.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
+}
+
+resource "aws_iam_user_policy_attachment" "acm_full_access_user_policy_attach" {
+  user       = aws_iam_user.programmatic_user.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
+}
