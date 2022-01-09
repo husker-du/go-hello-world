@@ -35,11 +35,13 @@ variable "tags" {
     Project      = string
     Team         = string
     Owner        = string
+    Name         = string
   })
   default = {
     Organization = "stayforlong"
     Project      = "go-hello-world"
     Team         = "job-appliers"
     Owner        = "ctomas"
+    Name         = "go-hello-world-staging"
   }
 }
