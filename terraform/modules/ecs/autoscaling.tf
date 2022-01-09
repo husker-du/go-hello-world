@@ -12,11 +12,33 @@ resource "aws_autoscaling_group" "ecs_cluster" {
   default_cooldown          = 60  # The amount of time, in seconds, after a scaling activity completes before another scaling activity can start.
   termination_policies      = ["OldestInstance"]
 
-  tag {
-    key                 = "Name"
-    value               = "${var.config.app_name}-${var.config.environment}"
-    propagate_at_launch = true
-  }
+  tags = [
+    {
+      key                 = "Name"
+      value               = var.config.tags["Name"]
+      propagate_at_launch = true
+    },
+    {
+      key                 = "Organization"
+      value               = var.config.tags["Organization"]
+      propagate_at_launch = true
+    },
+    {
+      key                 = "Project"
+      value               = var.config.tags["Project"]
+      propagate_at_launch = true
+    },
+    {
+      key                 = "Team"
+      value               = var.config.tags["Team"]
+      propagate_at_launch = true
+    },
+    {
+      key                 = "Owner"
+      value               = var.config.tags["Owner"]
+      propagate_at_launch = true
+    },
+  ]
 
   # Required to redeploy without an outage.
   lifecycle {
