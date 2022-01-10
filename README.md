@@ -1,30 +1,20 @@
 # go-hello-world
 Simple HTTP Hello World in Golang
 
-## Architecture
-![alt "ECS cluster architecture"](docs/go_hello_world_ecs_cluster.png)
+<br/><br/>
+# Architecture
+![alt "ECS cluster architecture"](docs/go_hello_world_architecture.png)
 
-
-## Prerequisites
+<br/><br/>
+# Prerequisites
 1. Docker installed and running
 2. Access to an AWS account
 3. aws cli installed
 4. terraform 1.1.0 installed
 5. python3 installed
 
-### How to build
-From the root of this repository run `make docker-build` and the binary will be located in `./out/` directory (the binary will be compiled for `linux amd64` platform only).
-
-# Run
-Just execute the binary and the webserver will be available at port `80`
-
-### Endpoints
-
-- `/` -> Hello World
-- `/health` -> health check
-
-
-## Pre-installation
+<br/><br/>
+# Pre-installation
 1. Create an IAM user **s4l-terraform** to apply the AWS infrastructure for this project and the S3 bucket and DynamoDB table for the terraform tfstate bucket.
 running terraform with a programmatic access user with at least IAM full access permission.
 ```
@@ -43,9 +33,9 @@ region = us-east-1
 output = json
 ```
 
-> Once the AWS user **s4l-terraform**, the terraform state S3 bucket and the DynamoDB lock table have been created, we can apply the resources in the modules under the directory `terraform/modules` for the _development_, _staging_ and _production_ environments.
+- Once the AWS user **s4l-terraform**, the terraform state S3 bucket and the DynamoDB lock table have been created, we can apply the resources in the modules under the directory `terraform/modules` for the _development_, _staging_ and _production_ environments.
 
-> The terraform command will apply the changes in AWS using the **s4l-terraform** identity and the S3 bucket and DynamoDb table in the 'us-east-1' region to manage the remote terraform state file as indicated in the `terraform` block of the `main.tf` file in every `env_[dev|staging|prod]` directory:
+- The terraform command will apply the changes in AWS using the **s4l-terraform** identity and the S3 bucket and DynamoDb table in the 'us-east-1' region to manage the remote terraform state file as indicated in the `terraform` block of the `main.tf` file in every `env_[dev|staging|prod]` directory:
 
 ```
 terraform {
@@ -60,7 +50,8 @@ terraform {
 }
 ```
 
-## Installation
+<br/><br/>
+# Installation
 - Run the following commands to install the AWS ECS cluster in the development environment:
 ```
   $ terraform -chdir=terraform/env_dev init
@@ -77,16 +68,14 @@ Apply complete! Resources: 40 added, 0 changed, 0 destroyed.
 Outputs:
 
 alb_dns_name = "go-hello-world-alb-dev-1896166617.us-east-1.elb.amazonaws.com"
-ecr_repository_url = "912061915192.dkr.ecr.us-east-1.amazonaws.com/go-hello-world"
+repository_name = "912061915192.dkr.ecr.us-east-1.amazonaws.com/go-hello-world"
 vpc_id = "vpc-06f5a84ddac1a105f"
 ```  
+- In `ECS > Clusters`, if you click on the **go-hello-world-cluster-dev** cluster, you'll see a **go-hello-world-service** with no tasks running. This happens because the task is defined to pull the 'go-hello-world' image from the corresponding ECR repository, but no image has been pushed to the repository yet.  
 
-In `ECS > Clusters`, if you click on the **go-hello-world-cluster-dev** cluster, you'll see a **go-hello-world-service** with no tasks running. This happens because the task is defined to pull the 'go-hello-world' image from the corresponding ECR repository, but no image has been pushed to the repository yet.  
+<br/><br/>
+# Automatic deployment: CI/CD
 
-The next step is to deploy the _go-hello-world_ application.  
-
-
-## CI/CD
 - The file `.github/workflows/workflow.yml` contains the definition of the CI/CD workflow.
 
 - Whenever you push a new commit to the `master` branch the CI (continuous integration) workflow job is triggered: 
@@ -106,52 +95,50 @@ The next step is to deploy the _go-hello-world_ application.
   - Push the image with the tagged version `v0.3` to the ECR repository,
   - Update the task definition of the ECS service with the tagged image of this version (v0.3)
 
-- If the complete CI/CD job finishes with no errors, the application has been successfully rolling updated in the development ECS cluster.
+- If the complete CI/CD job finishes with no errors, the application has been successfully rolling updated in the development ECS cluster.  
 
+<br/><br/>
+# On-demand deployment and other actions
 
-# Manual actions
+Set the variables in the Makefile according to your personal values.
 
-Set the variables in the Makefile acconding to your personal values.
-
-## Login the ECR repository
-``` 
-  $ make login
-```
-
-## Build the image
-
-``` 
-  $ make build
-```
-
-## Run the application in a docker container
-
-``` 
-  $ make run
-```
-### Endpoints
-
-- `/` -> Hello World
-- `/health` -> health check
-
-
-## Stop the docker container
-
-``` 
-  $ make stop
-```
-
-## Push the image to the ECR repository
-```
-  $ make push
-```
-
-## Deploy application to ECS service
+### *Deploy the application to ECS service*
 ```
   $ make deploy
 ```
 
+### *Login the ECR repository*
+``` 
+  $ make login
+```
 
+### *Build the docker image*
+``` 
+  $ make build
+```
+- A docker image will be created in the local repository (the binary will be compiled for `linux amd64` platform only).
+
+### *Run the application in a docker container*
+``` 
+  $ make run
+```
+- The webserver will be available at the specified port (`80`).
+
+- Endpoints
+  - `/` -> Hello World
+  - `/health` -> health check
+
+### *Stop the docker container*
+``` 
+  $ make stop
+```
+
+### *Push the image to the ECR repository*
+```
+  $ make push
+```
+
+<br/><br/>
 # Connect to an EC2 instance of the cluster
 - Terraform generates a SSH key pair. 
 - The public key is save in the `authorized_keys` of the EC2 instance.
