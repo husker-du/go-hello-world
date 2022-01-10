@@ -26,11 +26,17 @@ variable "public_subnet_ids" {
   type        = list(string)
 }
 
-# ECR
-variable "ecr_repository_url" {
+# Docker image
+variable "image_name" {
   description = "The URL of the image repository (in the form <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repository_name>)"
   type        = string
   default     = "tutum/hello-world"
+}
+
+variable "image_version" {
+  description = "The version tag of the docker image."
+  type        = string
+  default     = "latest"
 }
 
 # SSH key pair
