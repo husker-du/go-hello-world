@@ -70,7 +70,8 @@ module "ecs" {
   desired_capacity   = 2
   max_capacity       = 4
   min_capacity       = 2 # High availability
-  ecr_repository_url = module.ecr.repository_url
+  image_name         = module.ecr.repository_url
+  image_version      = "v0.3"
 }
 
 module "autoscaling" {

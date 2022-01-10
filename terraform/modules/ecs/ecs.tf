@@ -35,7 +35,7 @@ data "aws_ami" "ecs_optimized" {
 data "template_file" "app" {
   template = file("${path.module}/templates/app-container-definitions.json.tpl")
   vars = {
-    docker_image   = var.ecr_repository_url
+    docker_image   = format("%s%s", var.image_name, (var.image_version != "" ? ":${var.image_version}" : ""))
     container_name = var.config.app_name
     port_num       = var.config.port_num
   }

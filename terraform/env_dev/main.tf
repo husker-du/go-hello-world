@@ -69,8 +69,9 @@ module "ecs" {
   desired_tasks      = 2  # Number of replicas of the service task
   desired_capacity   = 2
   max_capacity       = 4
-  min_capacity       = 2  # High availability
-  ecr_repository_url = module.ecr.repository_url
+  min_capacity       = 1
+  image_name         = module.ecr.repository_url
+  image_version      = "v0.3"
 }
 
 module "autoscaling" {
