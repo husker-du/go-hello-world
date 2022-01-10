@@ -3,8 +3,8 @@
     "name": "${container_name}",
     "image": "${docker_image}",
     "essential": true,
-    "cpu": 100,
-    "memory": 256,
+    "cpu": 50,
+    "memory": 128,
     "portMappings": [
       {
         "containerPort": ${port_num},
