@@ -35,12 +35,3 @@ deploy: push
 	pip install -r deploy/requirements.txt; \
 	python3 deploy/ecs-deploy.py deploy --cluster=$(CLUSTER_NAME) --service=$(SERVICE_NAME) --image=$(REGISTRY_NAME)/$(REPOSITORY_NAME):$(VERSION_TAG) --region=$(REGION); \
 	deactivate
-
-rule1:
-	echo "bye"
-
-rule2:
-	date
-
-rule3: rule1
-	@echo "hello"
