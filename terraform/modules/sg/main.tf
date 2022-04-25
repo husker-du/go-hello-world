@@ -11,7 +11,7 @@ terraform {
 
 # ALB Security Group (Traffic Internet -> ALB)
 resource "aws_security_group" "alb" {
-  name        = "alb-sg-${var.config.environment}"
+  name        = "alb-sg-${terraform.workspace}"
   description = "Controls access to the ALB."
   vpc_id      = var.vpc_id
   tags        = var.config.tags
@@ -43,7 +43,7 @@ resource "aws_security_group" "alb" {
 
 # ECS Security group (traffic ALB -> ECS, ssh -> ECS)
 resource "aws_security_group" "ecs" {
-  name        = "ecs-sg-${var.config.environment}"
+  name        = "ecs-sg-${terraform.workspace}"
   description = "Allows inbound access from the ALB only to the application instances"
   vpc_id      = var.vpc_id
   tags        = var.config.tags

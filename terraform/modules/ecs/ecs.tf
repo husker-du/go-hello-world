@@ -11,7 +11,7 @@ terraform {
 
 # ECS cluster of EC2 instances
 resource "aws_ecs_cluster" "ecs" {
-  name = "${var.config.app_name}-cluster-${var.config.environment}"
+  name = "${var.config.app_name}-cluster-${terraform.workspace}"
   tags = var.config.tags
 }
 
@@ -75,7 +75,7 @@ resource "aws_ecs_service" "app" {
 
 # EC2 instance template launched by the autoscaling group
 resource "aws_launch_configuration" "ecs" {
-  name_prefix                 = "${aws_ecs_cluster.ecs.name}-${var.config.environment}-"
+  name_prefix                 = "${aws_ecs_cluster.ecs.name}-${terraform.workspace}-"
   image_id                    = data.aws_ami.ecs_optimized.id
   instance_type               = var.instance_type
   security_groups             = [var.ecs_sg_id]
@@ -95,7 +95,7 @@ resource "aws_launch_configuration" "ecs" {
 }
 
 resource "aws_autoscaling_group" "ecs_cluster" {
-  name_prefix               = "${var.config.app_name}-asg-${var.config.environment}-"
+  name_prefix               = "${var.config.app_name}-asg-${terraform.workspace}-"
   vpc_zone_identifier       = var.public_subnet_ids
   launch_configuration      = aws_launch_configuration.ecs.name
 
@@ -139,5 +139,6 @@ resource "aws_autoscaling_group" "ecs_cluster" {
   # Required to redeploy without an outage.
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [ desired_capacity ]
   }
 }
