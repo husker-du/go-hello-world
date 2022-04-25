@@ -11,7 +11,7 @@ terraform {
 
 # Application Load Balancer attached to the public subnets
 resource "aws_lb" "alb" {
-  name                             = "${var.config.app_name}-alb-${var.config.environment}"
+  name                             = "${var.config.app_name}-alb-${terraform.workspace}"
   load_balancer_type               = "application"
   internal                         = false
   subnets                          = var.public_subnet_ids
@@ -22,7 +22,7 @@ resource "aws_lb" "alb" {
 
 # Target group connected to the listener, it contains target IP addresses accross which incoming traffic is distributed
 resource "aws_alb_target_group" "ecs_http" {
-  name       = "${var.config.app_name}-http-tg-${var.config.environment}"
+  name       = "${var.config.app_name}-http-tg-${terraform.workspace}"
   port       = var.config.port_num
   protocol   = "HTTP"
   vpc_id     = var.vpc_id

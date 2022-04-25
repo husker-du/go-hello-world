@@ -1,7 +1,7 @@
 variable "profile" {
   description = "The AWS user profile for creating prerequisites."
   type        = string
-  default     = "s4l-terraform"
+  default     = ""
 }
 
 variable "region" {
@@ -13,13 +13,13 @@ variable "region" {
 variable "environment" {
   description = "The environment (dev, staging, prod)."
   type        = string
-  default     = "staging"
+  default     = ""
 }
 
 variable "app_name" {
   description = "The application name."
   type        = string
-  default     = "go-hello-world"
+  default     = ""
 }
 
 variable "port_num" {
@@ -38,10 +38,10 @@ variable "tags" {
     Name         = string
   })
   default = {
-    Organization = "stayforlong"
-    Project      = "go-hello-world"
-    Team         = "job-appliers"
-    Owner        = "ctomas"
-    Name         = "go-hello-world-staging"
+    Organization = ""
+    Project      = ""
+    Team         = ""
+    Owner        = ""
+    Name         = ""
   }
 }

@@ -6,6 +6,7 @@ data "aws_route53_zone" "dns" {
 
 #Create Alias record towards ALB from Route53
 resource "aws_route53_record" "alias" {
+  #for_each = var.alias_names
   zone_id = data.aws_route53_zone.dns.zone_id
   name    = data.aws_route53_zone.dns.name
   type    = "A"

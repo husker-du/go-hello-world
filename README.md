@@ -37,7 +37,7 @@ output = json
 
 - The terraform command will apply the changes in AWS using the **s4l-terraform** identity and the S3 bucket and DynamoDb table in the 'us-east-1' region to manage the remote terraform state file as indicated in the `terraform` block of the `main.tf` file in every `env_[dev|staging|prod]` directory:
 
-```
+```hcl
 terraform {
   backend "s3" {
     profile        = "s4l-terraform"
