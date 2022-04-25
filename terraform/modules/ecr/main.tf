@@ -13,6 +13,11 @@ terraform {
   required_version = ">= 1.1.0"
 }
 
+provider "docker" {
+  host = "unix:///var/run/docker.sock"
+}
+
+
 data "aws_caller_identity" "current" {}
 
 # Docker image repository

@@ -30,10 +30,6 @@ provider "aws" {
   region  = var.region
 }
 
-provider "docker" {
-  host = "unix:///var/run/docker.sock"
-}
-
 
 locals {
   # Configuration values shared by all the modules
