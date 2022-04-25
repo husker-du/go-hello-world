@@ -13,7 +13,7 @@ terraform {
   backend "remote" {
     organization = "hevil-terraform-labs"
     workspaces {
-      name = "go-hello-world"
+      name = "dev"
     }
   }
 
@@ -29,6 +29,11 @@ provider "aws" {
   profile = var.profile
   region  = var.region
 }
+
+provider "docker" {
+  host = "unix:///var/run/docker.sock"
+}
+
 
 locals {
   # Configuration values shared by all the modules
