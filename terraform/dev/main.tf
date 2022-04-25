@@ -1,11 +1,27 @@
+# terraform {
+#   backend "s3" {
+#     profile        = "s4l-terraform"
+#     encrypt        = "true"
+#     bucket         = "s4l-terraform-state"
+#     key            = "dev/hello-world/terraform.tfstate"
+#     dynamodb_table = "s4l-lock-dynamo"
+#     region         = "us-east-1"
+#   }
+# }
+
 terraform {
-  backend "s3" {
-    profile        = "s4l-terraform"
-    encrypt        = "true"
-    bucket         = "s4l-terraform-state"
-    key            = "dev/hello-world/terraform.tfstate"
-    dynamodb_table = "s4l-lock-dynamo"
-    region         = "us-east-1"
+  backend "remote" {
+    organization = "hevil-terraform-labs"
+    workspaces {
+      name = "go-hello-world"
+    }
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.27"
+    }
   }
 }
 
