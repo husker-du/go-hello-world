@@ -23,3 +23,9 @@ variable "health_check_path" {
   type        = string
   default     = "/health"
 }
+
+variable "dns_name" {
+  description = "Name of the DNS hosted zone. A domain name for which the certificate should be issued."
+  type        = string
+  default     = "example.com."
+}
